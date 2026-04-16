@@ -77,6 +77,7 @@ If needed:
 
 Store large files using Git LFS or external storage
 Avoid committing files >100 MB
+```
 
 📊 Results (Example)
 - Improved localization accuracy using hybrid CNN model
@@ -90,10 +91,10 @@ Avoid committing files >100 MB
 - Fusion with SLAM systems
 
 👩‍💻 Author
-Kavya Dave 
-Master’s Student – TUHH
-Wireless Localization | Deep learning | MATLAB
+- Kavya Dave 
+- Master’s Student – TUHH
+- Wireless Localization | Deep learning | MATLAB
 
 📄 License
-This project is for academic and research purposes.
-```
+- This project is for academic and research purposes.
+
