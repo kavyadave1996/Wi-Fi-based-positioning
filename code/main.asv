@@ -1,0 +1,37 @@
+%% clear   all; close all; clc;
+S = RandStream("mt19937ar","Seed",5489); % Set the RNG for reproducibility
+RandStream.setGlobalStream(S);
+
+% Simulation Parameters
+txArraySize = [4 1];     % Transmitting antenna array: 4 elements, linear
+rxArraySize = [4 1];     % Receiving antenna array: 4 elements, linear
+chanBW      = "CBW40";   % Channel bandwidth for Wi-Fi simulation
+
+distribution = "uniform";
+
+if distribution == "uniform"
+    val = 0.5;
+    [APs,STAs] = dlPositioningCreateEnvironment(txArraySize,rxArraySize,val,"uniform");
+else
+    numSTAs = 500; % Number of STAs for the random distribution
+    [APs,STAs] = dlPositioningCreateEnvironment(txArraySize,rxArraySize,numSTAs,"random");
+end
+
+task = "localization";
+
+mapFile = "layout.stl";
+
+viewer = siteviewer("SceneModel",mapFile,"Transparency",0.25);
+
+show(APs)
+show(STAs,"ShowAntennaHeight",false,"IconSize",[16 16]);
+disp(['Simulating a scenario with ',num2str(width(APs)),' APs and ',num2str(width(STAs)),' STAs with ',char(distribution),' distribution...'])
+
+pm = propagationModel("raytracing", ...
+    "CoordinateSystem","cartesian", ...
+    "SurfaceMaterial","wood", ...
+    "MaxNumReflections",1);
+
+% Perform ray tracing for all transmitters and receivers in parallel
+rays = raytrace(APs,STAs,pm,"Map",mapFileName);
+size(rays)

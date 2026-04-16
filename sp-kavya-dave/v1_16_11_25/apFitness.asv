@@ -1,0 +1,28 @@
+function score = apFitness(bits, candXY, staXY, coverageRadius, alpha, lambda, minCoverage)
+    % bits: 1xNc logical vector (GA chromosome)
+    % candXY: Nc x 2, candidate AP positions
+    % staXY: Ns x 2, STA positions
+    % coverageRadius: coverage radius per AP
+    % alpha: reward multiplier
+    % lambda: AP count penalty
+    % minCoverage: e.g., 0.95 for 95% STAs
+    
+
+    selected = find(bits);
+    if isempty(selected)
+        score = 1e6;  % Large penalty for no APs
+        return;
+    end
+    APs = candXY(selected, :);
+    dists = pdist2(staXY, APs);
+    coveredSTA = any(dists <= coverageRadius, 2);
+    numCovered = sum(coveredSTA);
+    coverageFraction = numCovered / size(staXY,1);
+
+    % Require at least minCoverage, else penalize hard
+    if coverageFraction < minCoverage
+        score = 1e6 + (minCoverage - coverageFraction)*1e5;
+    else
+        score = -(alpha * numCovered - lambda * numel(selected));
+    end
+end

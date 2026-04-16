@@ -1,0 +1,268 @@
+%% =========================================
+%% IDAC Thesis Template
+%% =========================================
+%% Instructions:
+%% Only modify the following files and folders:
+%% - thesis.tex (this file)
+%% - Your content goes into the respective files leading with numbers, e.g. 01Introduction
+%% - references.bib
+%% - figures/ (media folders)  
+%%
+%% Follow the TODOs in this template. 
+%% This template includes examples of figures, tables, equations, and references.
+%% Compile your PDF using Overleaf's Recompile button or your local LaTeX environment.
+%% Comments (lines starting with %) will not appear in the final PDF.
+%%
+%% TODO: If writing in German, uncomment the following line:
+% \PassOptionsToPackage{main=ngerman}{babel}
+
+\documentclass[colorlinks=true,linkcolor=blue]{thesisclass}
+
+% Core packages 
+\usepackage{graphicx}
+\DeclareGraphicsExtensions{.pdf,.png,.jpg,.svg}
+\graphicspath{{./figures/}}
+\usepackage{xcolor}
+\definecolor{idac_blue}{RGB}{0,65,120}
+\usetikzlibrary{arrows.meta,positioning,calc,fit,shapes.geometric}
+\usetikzlibrary{positioning,calc,decorations.pathreplacing}
+\renewcommand{\familydefault}{\sfdefault}
+\usetikzlibrary{fit,backgrounds}
+\usepackage{float}
+\usepackage{colortbl}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, calc, backgrounds, shadows}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.17}
+
+
+
+
+% Math and symbols
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{amstext}
+\usepackage{amsthm}
+\usepackage{pifont}
+\usepackage{newtxtext}
+\usepackage{newtxmath}
+\usepackage{amsfonts}
+\usepackage{bm}
+
+\theoremstyle{plain}
+\newtheorem{definition}{Definition}
+
+% Tables and layout
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{longtable}
+\usepackage[table]{xcolor}
+\usepackage{multirow}
+
+% Algorithms
+\usepackage{algorithm}
+\usepackage{algorithmicx}
+\usepackage{algpseudocode}
+
+% Figures and SVG
+\usepackage{svg}
+
+\usepackage{float}
+\usepackage{tikz}
+\usetikzlibrary{positioning,arrows.meta}
+
+
+% Glossary and acronyms
+\usepackage[acronym]{glossaries}
+\makeglossaries
+
+% References
+\usepackage{cleveref}
+
+% Additional utilities
+\usepackage{setspace}
+\usepackage[]{todonotes}
+\setkomafont{disposition}{\bfseries}
+
+\tikzset{
+  flow/.style = {very thick,-{Latex[length=3mm]}},
+  redflow/.style = {flow,draw=red!70!black},
+  blk/.style  = {draw, rounded corners=3pt, minimum height=9mm, align=center, inner sep=3.5pt, font=\sffamily\small},
+  tx/.style   = {blk, fill=orange!20, draw=orange!60!black},
+  ga/.style   = {blk, fill=yellow!25, draw=yellow!60!black},
+  chan/.style = {blk, fill=green!20,  draw=green!50!black},
+  rx/.style   = {blk, fill=blue!15,   draw=blue!60!black},
+  grayb/.style= {blk, fill=gray!15,   draw=gray!60},
+  outb/.style = {blk, fill=white,     draw=black},
+  lane/.style = {draw, rounded corners=5pt, inner sep=6pt},
+  titlebox/.style = {font=\sffamily\bfseries\footnotesize, anchor=west}
+}
+
+% TODO: Thesis title in English and German
+\title{Localization of mobile robots coupling building information modeling and Wi-Fi-based positioning}
+\germantitle{Lokalisierung mobiler Roboter durch Kopplung von Building Information Modeling und Wi-Fi-basierter Positionierung}
+\author{Kavya Dave}
+
+% TODO: Examiners and supervisors
+\firstexaminer{\iflanguage{english}{Professor Dr. Kay Smarsly}{Prof. Dr.-Ing. Kay Smarsly}}
+\secondexaminer{Dr. Alexander Chmelnizkij}
+\firstsupervisor{Aditya Tandon, M.Sc.}
+\secondsupervisor{Dr. Alexander Chmelnizkij}
+\thirdsupervisor{\iflanguage{english}{Professor Dr. Kay Smarsly}{Prof. Dr.-Ing. Kay Smarsly}}
+
+\matricle{565772} % TODO: Insert your matriculation number
+
+% TODO: Study program
+\degree{M.Sc. Information and Communication Systems}
+\studiengang{Information and Communication Systems}
+
+% TODO: Insert submission date
+\date{01.01.2025}
+
+% TODO: Insert dates for task assignment
+\startdate{01.09.2025}
+\submissiondate{01.03.2026}
+
+% TODO: Thesis type (choose one)
+% \type{Bachelor}
+% \type{Master}
+% \type{Seminar}
+\type{Project}
+
+% TODO: Add your acronyms here
+
+\newacronym{ap}{AP}{access point}
+\newacronym{awgn}{AWGN}{additive white gaussian noise}
+\newacronym{bim}{BIM}{Building information modeling}
+\newacronym{bbox}{$B_{\text{box}}$}{Bounding Box}
+\newacronym{one-d}{1-D}{one-dimensional}
+\newacronym{two-d}{2-D}{two-dimensional}
+\newacronym{three-d}{3-D}{three-dimensional}
+\newacronym{four-d}{4-D}{four-dimensional}
+\newacronym{aoa}{AoA}{angle of arrival}
+\newacronym{aod}{AoD}{angle of departure}
+\newacronym{ble}{BLE}{Bluetooth low energy}
+\newacronym{cir}{CIR}{channel impulse response}
+\newacronym{cdf}{CDF}{cumulative distribution function}
+\newacronym{cnn}{CNN}{convolutional neural network}
+\newacronym{cp}{CP}{cyclic prefix}
+\newacronym{csi}{CSI}{channel state information}
+\newacronym{ftm}{FTM}{fine timing measurement}
+\newacronym{fft}{FFT}{fast fourier transform}
+\newacronym{ga}{GA}{genetic algorithm}
+\newacronym{gdop}{GDOP}{geometric dilution of precision}
+\newacronym{ghz}{GHz}{gigaHertz}
+\newacronym{gnss}{GNSS}{global navigation satellite system}
+\newacronym{he}{HE}{high efficiency}
+\newacronym{heltf}{HE-LTF}{high efficiency long training fields}
+\newacronym{idac}{IDAC}{institute of digital and autonomous construction}
+\newacronym{ip}{IP}{Indoor positioning}
+\newacronym{knn}{K-nn}{k-nearest neighbor}
+\newacronym{ldpc}{LDPC}{low-Density parity code}
+\newacronym{lidar}{LiDAR}{light detection and ranging}
+\newacronym{los}{LoS}{line-of-sight}
+\newacronym{ltf}{LTF}{long training field}
+\newacronym{mimo}{MIMO}{multiple input multiple output}
+\newacronym{mlp}{MLP}{multilayer perceptron}
+\newacronym{mse}{MSE}{mean squared error}
+\newacronym{moga}{MOGA}{multi-objective genetic algorithm}
+\newacronym{mtl}{MTL}{ multi-tasking learning}
+\newacronym{mumimo}{MU-MIMO}{multiple users-multiple inputs multiple outputs}
+\newacronym{nsga-||}{NSGA-II}{non-dominated sorting genetic algorithm II}
+\newacronym{ngp}{NGP}{next generation positioning}
+\newacronym{nlos}{NLOS}{non-line-of-sight}
+\newacronym{ofdm}{OFDM}{orthogonal frequency division multiplexing}
+\newacronym{ofdma}{OFDMA}{orthogonal frequency division multiple access}
+\newacronym{pgrid}{$P_\text{grid}$}{grid point}
+\newacronym{pdop}{PDOP}{position dilution of precision}
+\newacronym{ram}{RAM}{random access memory}
+\newacronym{rf}{RF}{radio frequency}
+\newacronym{rfid}{RFID}{radio frequency identification}
+\newacronym{rms}{RMS}{root mean square}
+\newacronym{rmse}{RMSE}{root mean square error}
+\newacronym{rn}{ResNet}{residual network}
+\newacronym{rssi}{RSSI}{received signal strength indicator}
+\newacronym{rtt}{RTT}{round trip time}
+\newacronym{siso}{SISO}{single-input single-output}
+\newacronym{soga}{SOGA}{single-objective genetic algorithm}
+\newacronym{svm}{SVM}{support vector machines}
+\newacronym{slam}{SLAM}{simultaneous localization and mapping}
+\newacronym{snr}{SNR}{signal-to-noise ratio}
+\newacronym{sta}{STA}{station}
+\newacronym{stl}{STL}{standard tessellation language}
+\newacronym{toa}{ToA}{time of arrival}
+\newacronym{tof}{ToF}{time-of-flight}
+\newacronym{tuhh}{TUHH}{technical university of hamburg}
+\newacronym{uwb}{UWB}{Ultra-Wide band}
+\newacronym{wifi}{Wi-Fi}{wireless fidelity}
+\newacronym{wlan}{WLAN}{wireless local area network}
+
+\begin{document}
+\maketitle
+
+% TODO: Uncomment if you do not want page numbers before introduction
+% \pagestyle{empty}
+\pagenumbering{Roman}
+
+\begin{abstract}
+% TODO: Enter your abstract here.
+%\textcolor{red}{General statement} \\
+Mobile robots are increasingly being utilized in indoor spaces for automated inspections and monitoring tasks.
+%\textcolor{red}{Research problem statement} \\
+Reliable and accurate indoor localization is therefore essential. However, conventional indoor localization techniques, such as \gls{rfid}, Bluetooth, or \gls{wifi}, \gls{rssi}, are prone to limited robustness and accuracy, particularly in the built environment. Achieving centimeter-level accuracy with \acrshort{wifi} signals continues as a significant hurdle due to signal attenuation and multi-path propagation. To address such challenges, the work proposes a \gls{bim}-assisted indoor localization framework that integrates IEEE 802.11az physical layer characteristics with fusion and optimized access point placement.
+%\textcolor{red}{Research gap statement} \\
+Current indoor positioning techniques rely on individual network characteristics, such as the \acrshort{rssi}, \gls{tof}, \gls{aoa}, or \gls{cir}. When used in isolation, the positioning system often suffers from limited accuracy and robustness under dynamic conditions. Additionally, lack of optimization strategies for determining the deployment and optimal number of \gls{ap} to ensure reliable positioning accuracy and signal coverage. Existing techniques neglect key built environmental factors, including materials, layout and structure, which widely affect \acrshort{ap} placement and signal propagation.
+%\textcolor{red}{Own approach description} \\
+\acrshort{bim} is used to create \gls{three-d} representations of building materials, layout and structure, enabling accurate placement of \acrshort{ap}s to enhance the signal positioning and coverage. The project introduces a software framework that utilizes a hybrid technique fusing multiple physical-layer characteristics, such as \acrshort{rssi}, \acrshort{tof}, \acrshort{aoa}, and \acrshort{cir} derived from IEEE 802.11az \acrshort{wifi} signals, into an integrated input for a \gls{cnn} for precise learning-based robot localization. Simultaneously, the framework utilizes a \gls{ga} to enhance the geometrical placement of \acrshort{ap}s in a given infrastructure model to increase robustness and localization coverage.
+%\textcolor{red}{Implementation} \\
+The introduced framework is performed in MATLAB, using the communications toolbox for wireless channel modeling and ray tracing. In addition, the deep learning toolbox is for training and designing neural networks. For automatic \acrshort{ap} placement optimization, a custom \acrshort{ga} is developed. The entire framework, such as feature extraction, fusion of physical-layer characteristics, data generation and \acrshort{cnn}-based positioning, is implemented as a simulation on a standard platform. The system does not work in real time; however, operates in batches, enabling various environments to be tested using \gls{stl} as input.
+%\textcolor{red}{Validation} \\
+The proposed framework is validated utilizing a \acrshort{bim}-based indoor environments of 39 m x 15 m dimensions. Performance is estimated under bandwidth impact assessment, effect of station separation, antenna scaling, and material sensitivity. Regression head is evaluated based on \acrshort{rmse}, median and percentile positioning errors summarized from \acrshort{cdf}, while classification head is assessed utilizing confusion matrices.
+%\textcolor{red}{Results and conclusions} \\
+Validation outcomes recognize the 2 x 1 antenna configuration, 0.5~m separation distance, and CBW160 MHz bandwidth as the best optimal configuration for compensating hardware complexity and positioning reliability. The proposed multimodal framework substantially enhances robustness over baseline models, obtaining centimeter-level accuracy continues to be a challenge because of the complex multipath propagation and signal noise floor is in-built in dense indoor environments. Eventually the proposed framework achieves a best-case of \acrshort{rmse} of 4.43~m, offering a solid \acrshort{bim} foundation for autonomous robot navigation in indoor environment.
+\end{abstract}
+\pagebreak
+
+%% Declaration (Eidesstattliche Erklärung)
+\printdeclaration
+
+\printtaskdescription \newpage 
+
+
+% Front matter
+\tableofcontents\newpage
+\listoffigures\newpage
+\listoftables
+\printglossaries\newpage
+
+\clearpage
+\pagenumbering{arabic}
+\setcounter{page}{1}
+\pagestyle{plain}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%               THESIS CONTENT                 %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\include{01Introduction}
+\include{02Background} % TODO: Uncomment if not needed
+\include{03Methodology}
+\include{04Implementation}
+\include{05Validation}
+\include{06Conclusion}
+
+% References
+\phantomsection
+\addcontentsline{toc}{chapter}{\bibname}
+\bibliographystyle{plain}
+\bibliography{references}
+\pagebreak
+
+% Optional appendix
+% \chapter{Appendix}
+% \label{ch:Appendix}
+% \pagebreak
+
+%\include{99Appendices}
+
+\end{document}
+

@@ -1,0 +1,101 @@
+
+%% ========== Local helper functions (place at end of file) ==========
+
+function xy = getXYFromSites(sites)
+% Return [x y] (meters) for txsite/rxsite in cartesian coords
+    N = numel(sites);
+    xy = zeros(N,2);
+    for i = 1:N
+        if isprop(sites,'AntennaPosition')
+            p = sites(i).AntennaPosition;   % [x;y;z]
+        elseif isprop(sites,'Position')
+            p = sites(i).Position;          % [x;y;z] alternative
+        else
+            error('Sites lack AntennaPosition/Position properties.');
+        end
+        if isrow(p), p = p.'; end
+        xy(i,:) = double(p(1:2)).';
+    end
+end
+
+function APs = buildAPSitesFromXY(APsXY, apHeight)
+% Make txsite("cartesian") array from XY + fixed height
+    M = size(APsXY,1);
+    APs = txsite.empty;
+    for i = 1:M
+        APs(i) = txsite("cartesian", ...
+            "AntennaPosition", [APsXY(i,1); APsXY(i,2); apHeight], ...
+            "Name", sprintf("AP_%d", i));
+    end
+end
+
+function [APsXY, mask, score] = optimizeAPPlacementWithGA(STAs, area, gridStep, minAPs, maxAPs, alpha, lambda)
+% GA selects which candidate grid points become APs (and how many)
+    xs = area(1):gridStep:area(2);
+    ys = area(3):gridStep:area(4);
+    [XX,YY] = meshgrid(xs,ys);
+    candXY = [XX(:) YY(:)];
+    Nc = size(candXY,1);
+
+    staXY = getXYFromSites(STAs);
+
+    % Linear constraint: minAPs <= sum(bits) <= maxAPs
+    A = [ ones(1,Nc); -ones(1,Nc) ];
+    b = [ maxAPs;     -minAPs    ];
+
+    fitnessFcn = @(bits) apFitness(bits, candXY, staXY, alpha, lambda);
+
+    opts = optimoptions('ga', ...
+        'PopulationType','bitstring', ...
+        'PopulationSize', 60, ...
+        'MaxGenerations', 40, ...
+        'UseVectorized', false, ...
+        'Display','iter');
+
+    [bestBits, bestScore] = ga(fitnessFcn, Nc, A, b, [], [], [], [], [], opts);
+
+    mask  = logical(bestBits(:));
+    APsXY = candXY(mask,:);
+    score = bestScore;
+end
+
+function f = apFitness(bits, candXY, staXY, alpha, lambda)
+% Lower is better: geometry (PDOP proxy) + coverage penalty + AP count penalty
+    mask = logical(bits(:));
+    numAP = sum(mask);
+    if numAP < 3
+        f = 1e6 + (3-numAP)*1e5; return;
+    end
+
+    APsXY = candXY(mask,:);
+
+    % Coverage: need >=K APs within Rmax
+    K = 3;      % anchors required for 2D multilateration
+    Rmax = 12;  % meters (tune to your map)
+    D = pdist2(staXY, APsXY);    % Ns x numAP
+    vis = sum(D <= Rmax, 2);
+    coverage = mean(vis >= K);   % 0..1
+
+    % Geometry proxy (PDOP2D-like)
+    Ns = size(staXY,1);
+    pdops = nan(Ns,1);
+    for i = 1:Ns
+        [~,ord] = sort(D(i,:),'ascend');
+        m = min(K, numAP);
+        if m < 2, pdops(i) = 1e3; continue; end
+        use = ord(1:m);
+        v = APsXY(use,:) - staXY(i,:);
+        r = vecnorm(v,2,2) + eps;
+        u = v ./ r;           % unit vectors (m x 2)
+        M = (u.'*u);
+        if rcond(M) < 1e-10
+            pdops(i) = 1e3;
+        else
+            pdops(i) = sqrt(trace(inv(M)));
+        end
+    end
+    medPDOP = median(pdops(~isnan(pdops)));
+
+    % Objective
+    f = medPDOP + alpha*(1 - coverage) + lambda*numAP;
+end

@@ -1,0 +1,4 @@
+% Create 30 candidate AP locations
+[xGrid, yGrid] = meshgrid(1:2:10, 1:2:10);  % 25 possible locations
+candXY = [xGrid(:)'; yGrid(:)'];            % 2 x N matrix
+save('candidateAPs.mat', 'candXY');
