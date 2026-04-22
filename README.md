@@ -58,7 +58,6 @@ The system integrates **machine learning (CNN-based models)** and **optimization
 ## ⚙️ Requirements
 
 - MATLAB (with Deep Learning Toolbox)
-- Python (optional for preprocessing / extensions)
 - Git
 
 ---
