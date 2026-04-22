@@ -59,6 +59,7 @@ The system integrates **machine learning (CNN-based models)** and **optimization
 
 - MATLAB (with Deep Learning Toolbox)
 - Git
+- Blender
 
 ---
 
